@@ -1,29 +1,20 @@
 module.exports = function check(str, bracketsConfig) {
-  const stack = [];
-  const openingBrackets = [];
-  const closingBrackets = [];
+  bracketsConfig = bracketsConfig.map(item => item.join(''));
 
-  for (let i = 0; i < bracketsConfig.length; i++) {
-    openingBrackets.push(bracketsConfig[i][0]);
-    closingBrackets.push(bracketsConfig[i][1]);
-  }
+  while (bracketsConfig.length) {
+    let iterator = 0;
 
-  for (let i = 0; i < str.length; i++) {
-    const currentBracket = str[i];
-
-    if (openingBrackets.includes(currentBracket)) {
-      // Если текущая скобка - открывающая, помещаем ее в стек
-      stack.push(currentBracket);
-    } else if (closingBrackets.includes(currentBracket)) {
-      // Если текущая скобка - закрывающая, проверяем соответствие с последней открывающей скобкой в стеке
-      const lastOpeningBracket = stack.pop();
-      const correspondingClosingBracket = closingBrackets[openingBrackets.indexOf(lastOpeningBracket)];
-
-      if (currentBracket !== correspondingClosingBracket) {
-        return false; // Несоответствие скобок
+    bracketsConfig.forEach(item => {
+      if (str.indexOf(item) != -1) {
+        str = str.replace(item, '');
+      } else {
+        iterator += 1;
       }
+    });
+    
+    if (iterator === bracketsConfig.length) {
+      bracketsConfig.length = 0;
     }
   }
-
-  return stack.length === 0;
+  return str.length === 0 ? true : false;
 }
